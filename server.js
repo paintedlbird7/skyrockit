@@ -6,13 +6,13 @@ const morgan = require('morgan');
 const session = require('express-session');
 
 const app = express();
-const applicationsController = require('./controllers/applications.js');
 // Require our new middleware
 const isSignedIn = require('./middleware/is-signed-in.js');
 const passUserToView = require('./middleware/pass-user-to-view.js');
 
 // Require controllers
 const authController = require('./controllers/auth.js');
+const applicationsController = require('./controllers/applications.js')
 
 const port = process.env.PORT || 3000;
 
@@ -26,7 +26,7 @@ mongoose.connection.on('connected', () => {
 // Middleware setup
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
-// app.use(morgan('dev'));
+app.use(morgan('dev'));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -35,7 +35,8 @@ app.use(
   })
 );
 
-// Use passUserToView middleware to make user available in views
+// Use passUserToView middleware to make user available in views,
+// passUserToView comes after session middlewware but before homepage
 app.use(passUserToView);
 
 // GET Build the Applications Index Page
@@ -58,10 +59,10 @@ app.get('/', (req, res) => {
 
 // removed the VIP lounge & updated the index.ejs to skyrockit
 
-// Authentication routes
+// Authentication routes, only logged in users can see
 app.use('/auth', authController);
 // Use isSignedIn middleware to protect routes that come after this
-app.use(isSignedIn);
+app.use(isSignedIn); //this middleware runs after auth routes - the user needs to authenticate first
 app.use('/auth', authController);
 app.use(isSignedIn);
 app.use('/users/:userId/applications', applicationsController);

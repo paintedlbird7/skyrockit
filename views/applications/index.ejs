@@ -12,10 +12,11 @@
     <h1>Your Apps</h1>
     <a href="/users/<%=user._id%>/applications/new">Add an App</a>
     <ul>
-      <% applications.forEach((application)=>{ %>
+<!-- TODO: you should now be able to see a list of all of the applications you’ve created on this page! page just resets-->
+<!-- gets a 304 GET /users/67d1c73240c7f288ce1c8def/applications 304 49.254 ms - - -->
+    <% applications.forEach((application)=>{ %>
       <li><%= application.title %> at <%= application.company %></li>
       <% }) %>
-      <!-- TODO: you should now be able to see a list of all of the applications you’ve created on this page! page just resets-->
     </ul>
   </body>
 </html>

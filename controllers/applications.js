@@ -42,6 +42,7 @@ router.get('/new', async (req, res) => {
 // controllers/applications.js`
 
 //TODO: tested the create post, can't find it in mongo atlas 
+// gets a 304 GET /users/67d1c73240c7f288ce1c8def/applications 304 49.254 ms - -
 router.post('/', async (req, res) => {
   try {
     // Look up the user from req.session
