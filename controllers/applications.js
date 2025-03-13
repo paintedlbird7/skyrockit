@@ -51,7 +51,6 @@ router.post("/", async (req, res) => {
 // });
 
 // GET / :id
-// TODO: check why data shows twice
 router.get("/:applicationId", async (req, res) => {
   try {
     // Look up the user from req.session
@@ -70,16 +69,15 @@ router.get("/:applicationId", async (req, res) => {
 });
 
 // DELETE /users/:userId/applications/:applicationsId
-//TODO: localhost doesnt have any delete functionality
 router.delete("/:applicationId", async (req, res) => {
   try {
     // Look up the user from req.session
     const currentUser = await User.findById(req.session.user._id);
     // Use the Mongoose .deleteOne() method to delete
     // an application using the id supplied from req.params
-    currentUser.applications.id(req.params.applicationId).deleteOne();
+    currentUser.applications.id(req.params.applicationId).deleteOne(); // makes changes in the memory
     // Save changes to the user
-    await currentUser.save();
+    await currentUser.save(); // makes the change in database
     // Redirect back to the applications index view
     res.redirect(`/users/${currentUser._id}/applications`);
   } catch (error) {
@@ -90,8 +88,7 @@ router.delete("/:applicationId", async (req, res) => {
 });
 
 // GET/ EDIt
-// GET /users/:userId/applications/edit
-//TODO: localhost doesnt have any edit functionality
+// GET /users/:userId/applications/:applicationsId/edit
 router.get("/:applicationId/edit", async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id);
