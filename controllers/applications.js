@@ -1,33 +1,33 @@
 // controllers/applications.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const User = require('../models/user.js');
+const User = require("../models/user.js");
 
 // GET
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     // Look up the user from req.session
     const currentUser = await User.findById(req.session.user._id);
     // Render index.ejs, passing in all of the current user's
     // applications as data in the context object.
-    res.render('applications/index.ejs', {
+    res.render("applications/index.ejs", {
       applications: currentUser.applications,
     });
   } catch (error) {
     // If any errors, log them and redirect back home
     console.log(error);
-    res.redirect('/');
+    res.redirect("/");
   }
 });
-  
+
 // GET /users/:userid/applications/new
-router.get('/new', async (req, res) => {
-  res.render('applications/new.ejs');
+router.get("/new", async (req, res) => {
+  res.render("applications/new.ejs");
 });
 
 //POST /users/:userId/applications
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     // Look up the user from req.session
     const currentUser = await User.findById(req.session.user._id);
@@ -41,13 +41,37 @@ router.post('/', async (req, res) => {
   } catch (error) {
     // If any errors, log them and redirect back home
     console.log(error);
-    res.redirect('/');
+    res.redirect("/");
+  }
+});
+
+// router.get('/:applicationId', (req, res) => {
+
+//   // res.send(`here is your request param: ${req.params.applicationId}`);
+// });
+
+// GET / :id
+// TODO: check why data shows twice
+router.get("/:applicationId", async (req, res) => {
+  try {
+    // Look up the user from req.session
+    const currentUser = await User.findById(req.session.user._id);
+    // Find the subdocument in rhw currently logged in user's applications list, application by the applicationId supplied from req.params
+    const application = currentUser.applications.id(req.params.applicationId);
+    // Render the show template with the sub-document's details view, passing the application data in the context object
+    res.render("applications/show.ejs", {
+      application: application,
+    });
+  } catch (error) {
+    // If any errors, log them and redirect back home
+    console.log(error);
+    res.redirect("/");
   }
 });
 
 // DELETE /users/:userId/applications/:applicationsId
 //TODO: localhost doesnt have any delete functionality
-router.delete('/:applicationId', async (req, res) => {
+router.delete("/:applicationId", async (req, res) => {
   try {
     // Look up the user from req.session
     const currentUser = await User.findById(req.session.user._id);
@@ -61,31 +85,30 @@ router.delete('/:applicationId', async (req, res) => {
   } catch (error) {
     // If any errors, log them and redirect back home
     console.log(error);
-    res.redirect('/');
+    res.redirect("/");
   }
 });
-
 
 // GET/ EDIt
 // GET /users/:userId/applications/edit
 //TODO: localhost doesnt have any edit functionality
-router.get('/:applicationId/edit', async (req, res) => {
+router.get("/:applicationId/edit", async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id);
     const application = currentUser.applications.id(req.params.applicationId);
-    res.render('applications/edit.ejs', {
+    res.render("applications/edit.ejs", {
       application: application,
     });
   } catch (error) {
     console.log(error);
-    res.redirect('/');
+    res.redirect("/");
   }
 });
 
 //PUT /users/:userId/applications/:applicationId
 // controllers/applications.js`
 
-router.put('/:applicationId', async (req, res) => {
+router.put("/:applicationId", async (req, res) => {
   try {
     // Find the user from req.session
     const currentUser = await User.findById(req.session.user._id);
@@ -103,13 +126,12 @@ router.put('/:applicationId', async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    res.redirect('/');
+    res.redirect("/");
   }
 });
 
-// router.get 
+// router.get
 // route will be /applicationid
 // first find application id then have res.render to show specific application/show.ejs
-
 
 module.exports = router;

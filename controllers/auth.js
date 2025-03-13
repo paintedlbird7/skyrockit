@@ -17,10 +17,11 @@ router.get('/sign-out', (req, res) => {
   res.redirect('/');
 });
 
+// READ/ Retrieval using a mongoose modal method
 router.post('/sign-up', async (req, res) => {
   try {
     // Check if the username is already taken
-    const userInDatabase = await User.findOne({ username: req.body.username });
+    const userInDatabase = await User.findOne({ username: req.body.username }); // returns user document or null
     if (userInDatabase) {
       return res.send('Username already taken.');
     }
@@ -32,7 +33,7 @@ router.post('/sign-up', async (req, res) => {
     }
   
     // Must hash the password before sending to the database
-    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10); // bycrpt to hash and salt the password
     req.body.password = hashedPassword;
   
     // All ready to create the new user!
