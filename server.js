@@ -13,6 +13,7 @@ const passUserToView = require('./middleware/pass-user-to-view.js');
 // Require controllers
 const authController = require('./controllers/auth.js');
 const applicationsController = require('./controllers/applications.js')
+const path = require('path');
 
 const port = process.env.PORT || 3000;
 
@@ -27,6 +28,8 @@ mongoose.connection.on('connected', () => {
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
